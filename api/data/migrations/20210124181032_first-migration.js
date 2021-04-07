@@ -1,14 +1,88 @@
 exports.up = async (knex) => {
   await knex.schema
-    .createTable('users', (users) => {
-      users.increments('user_id')
-      users.string('user_username', 200).notNullable()
-      users.string('user_password', 200).notNullable()
-      users.string('user_email', 320).notNullable()
-      users.timestamps(false, true)
+    .createTable("user_information", (users) => {
+      users.increments("user_id");
+      users.string("user_username", 200).notNullable().unique();
+      users.string("user_password", 200).notNullable();
+      users.string("user_email", 320).notNullable().unique();
+      users.string("user_phone", 300).unique();
+      users.timestamps(false, true);
     })
-}
+    .createTable("user_profile", (users) => {
+      users.increments("user_profile_id");
+      users.string("user_profile_firstName", 200).notNullable();
+      users.string("user_profile_lastName", 200).notNullable();
+      users.date("user_profile_birthday").notNullable();
+      users.string("user_profile_main_img", 500);
+      users.string("user_profile_header_img", 500);
+      users.text("user_profile_bio");
+      users.string("user_profile_location", 300);
+      users
+        .integer("user_id")
+        .unsigned()
+        .notNullable()
+        .references("user_id")
+        .inTable("user_information")
+        .onDelete("RESTRICT");
+    })
+    .createTable("user_friends", (users) => {
+      users.increments("user_friend_id");
+      users.json("user_friend_list");
+      users
+        .integer("user_id")
+        .unsigned()
+        .notNullable()
+        .references("user_id")
+        .inTable("user_information")
+        .onDelete("RESTRICT");
+    })
+    .createTable("user_posts", (users) => {
+      users.increments("user_post_id");
+      users.text("user_post_text").notNullable();
+      users.string("user_post_img");
+      users.string("user_post_city", 200);
+      users.string("user_post_State", 200);
+      users.integer("user_post_thumbUp").notNullable().defaultTo(0);
+      users.integer("user_post_thumbDown").notNullable().defaultTo(0);
+    })
+    .createTable("user_comments", (users) => {
+      users.increments("user_comment_id");
+      users.text("user_comment_text").notNullable();
+      users.integer("user_comment_thumbUp").notNullable().defaultTo(0);
+      users.integer("user_comment_thumbDown").notNullable().defaultTo(0);
+      users
+        .integer("user_post_id")
+        .unsigned()
+        .notNullable()
+        .references("user_post_id")
+        .inTable("user_posts")
+        .onDelete("RESTRICT");
+    })
+    .createTable("user_comments_display", (users) => {
+      users.increments("user_comment_display_id");
+      users
+        .integer("user_id")
+        .unsigned()
+        .notNullable()
+        .references("user_id")
+        .inTable("user_information")
+        .onDelete("RESTRICT");
+      users
+        .integer("user_comment_id")
+        .unsigned()
+        .notNullable()
+        .references("user_comment_id")
+        .inTable("user_comments")
+        .onDelete("RESTRICT");
+    });
+};
 
 exports.down = async (knex) => {
-  await knex.schema.dropTableIfExists('users')
-}
+  await knex.schema
+    .dropTableIfExists("user_information")
+    .dropTableIfExists("user_profile")
+    .dropTableIfExists("user_friends")
+    .dropTableIfExists("user_posts")
+    .dropTableIfExists("user_comments")
+    .dropTableIfExists("user_comments_display");
+};
