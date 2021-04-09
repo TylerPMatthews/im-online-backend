@@ -1,27 +1,27 @@
 const db = require("../../api/data/db-config");
 
-//Get All users information
+//Get All users friends
 const getAll = () => {
-  return db("user_information");
+  return db("user_friends");
 };
-//Get A users information by ID
+//Get A users friends by userID
 const getByID = (id) => {
-  return db("user_information").where("user_id", id);
+  return db("user_friends").where("user_id", id);
 };
 //Post a new users information
 const post = (data) => {
-  return db("user_information").insert(data);
+  return db("user_friends").insert(data);
 };
 //Edit a users information by ID
 const edit = (id, changes) => {
-  return db("user_information").where("user_id", id).update(changes);
+  return db("user_friends").where("user_friends_id", id).update(changes);
 };
 //Delete a users information by ID
 const remove = (id) => {
-  return db("user_information").where("user_id", id).del();
+  return db("user_friends").where("user_friends_id", id).del();
 };
 const findBy = (filter) => {
-  return db("user_information").where(filter);
+  return db("user_friends").where(filter);
 };
 module.exports = {
   getAll,

@@ -12,7 +12,6 @@ exports.up = async (knex) => {
       users.increments("user_profile_id");
       users.string("user_profile_firstName", 200).notNullable();
       users.string("user_profile_lastName", 200).notNullable();
-      users.date("user_profile_birthday").notNullable();
       users.string("user_profile_main_img", 500);
       users.string("user_profile_header_img", 500);
       users.text("user_profile_bio");
@@ -25,17 +24,7 @@ exports.up = async (knex) => {
         .inTable("user_information")
         .onDelete("RESTRICT");
     })
-    .createTable("user_friends", (users) => {
-      users.increments("user_friend_id");
-      users.json("user_friend_list");
-      users
-        .integer("user_id")
-        .unsigned()
-        .notNullable()
-        .references("user_id")
-        .inTable("user_information")
-        .onDelete("RESTRICT");
-    })
+
     .createTable("user_posts", (users) => {
       users.increments("user_post_id");
       users.text("user_post_text").notNullable();
@@ -44,36 +33,30 @@ exports.up = async (knex) => {
       users.string("user_post_State", 200);
       users.integer("user_post_thumbUp").notNullable().defaultTo(0);
       users.integer("user_post_thumbDown").notNullable().defaultTo(0);
-    })
-    .createTable("user_comments", (users) => {
-      users.increments("user_comment_id");
-      users.text("user_comment_text").notNullable();
-      users.integer("user_comment_thumbUp").notNullable().defaultTo(0);
-      users.integer("user_comment_thumbDown").notNullable().defaultTo(0);
       users
-        .integer("user_post_id")
-        .unsigned()
-        .notNullable()
-        .references("user_post_id")
-        .inTable("user_posts")
-        .onDelete("RESTRICT");
+      .integer("user_id")
+      .unsigned()
+      .notNullable()
+      .references("user_id")
+      .inTable("user_information")
+      .onDelete("CASCADE");
     })
-    .createTable("user_comments_display", (users) => {
-      users.increments("user_comment_display_id");
+    .createTable("view_user_post", (users) => {
+      users.increments("view_user_post_id");
       users
         .integer("user_id")
         .unsigned()
         .notNullable()
         .references("user_id")
         .inTable("user_information")
-        .onDelete("RESTRICT");
+        .onDelete("CASCADE");
       users
-        .integer("user_comment_id")
+        .integer("user_post_id")
         .unsigned()
         .notNullable()
-        .references("user_comment_id")
-        .inTable("user_comments")
-        .onDelete("RESTRICT");
+        .references("user_post_id")
+        .inTable("user_posts")
+        .onDelete("CASCADE");
     });
 };
 
@@ -81,8 +64,6 @@ exports.down = async (knex) => {
   await knex.schema
     .dropTableIfExists("user_information")
     .dropTableIfExists("user_profile")
-    .dropTableIfExists("user_friends")
     .dropTableIfExists("user_posts")
-    .dropTableIfExists("user_comments")
-    .dropTableIfExists("user_comments_display");
+    .dropTableIfExists("view_user_post");
 };
