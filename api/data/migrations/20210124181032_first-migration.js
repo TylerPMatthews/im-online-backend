@@ -33,13 +33,14 @@ exports.up = async (knex) => {
       users.string("user_post_State", 200);
       users.integer("user_post_thumbUp").notNullable().defaultTo(0);
       users.integer("user_post_thumbDown").notNullable().defaultTo(0);
+      users.timestamps(false, true);
       users
-      .integer("user_id")
-      .unsigned()
-      .notNullable()
-      .references("user_id")
-      .inTable("user_information")
-      .onDelete("CASCADE");
+        .integer("user_id")
+        .unsigned()
+        .notNullable()
+        .references("user_id")
+        .inTable("user_information")
+        .onDelete("CASCADE");
     })
     .createTable("view_user_post", (users) => {
       users.increments("view_user_post_id");
@@ -57,6 +58,49 @@ exports.up = async (knex) => {
         .references("user_post_id")
         .inTable("user_posts")
         .onDelete("CASCADE");
+    })
+    .createTable("user_comment", (users) => {
+      users.increments("user_comment_id");
+      users.string("user_comment_text").notNullable();
+      users.timestamps(false, true);
+      users
+        .integer("user_id")
+        .unsigned()
+        .notNullable()
+        .references("user_id")
+        .inTable("user_information")
+        .onDelete("CASCADE");
+      users
+        .integer("user_post_id")
+        .unsigned()
+        .notNullable()
+        .references("user_post_id")
+        .inTable("user_posts")
+        .onDelete("CASCADE");
+    })
+    .createTable("user_comment_view", (users) => {
+      users.increments("user_comment_view_id");
+      users
+        .integer("user_id")
+        .unsigned()
+        .notNullable()
+        .references("user_id")
+        .inTable("user_information")
+        .onDelete("CASCADE");
+      users
+        .integer("user_post_id")
+        .unsigned()
+        .notNullable()
+        .references("user_post_id")
+        .inTable("user_posts")
+        .onDelete("CASCADE");
+      users
+        .integer("user_comment_id")
+        .unsigned()
+        .notNullable()
+        .references("user_comment_id")
+        .inTable("user_comment")
+        .onDelete("CASCADE");
     });
 };
 
@@ -65,5 +109,7 @@ exports.down = async (knex) => {
     .dropTableIfExists("user_information")
     .dropTableIfExists("user_profile")
     .dropTableIfExists("user_posts")
-    .dropTableIfExists("view_user_post");
+    .dropTableIfExists("view_user_post")
+    .dropTableIfExists("user_comment")
+    .dropTableIfExists("user_comment_view");
 };
