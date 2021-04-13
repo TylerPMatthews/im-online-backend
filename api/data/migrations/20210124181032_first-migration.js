@@ -31,8 +31,6 @@ exports.up = async (knex) => {
       users.string("user_post_img");
       users.string("user_post_city", 200);
       users.string("user_post_State", 200);
-      users.integer("user_post_thumbUp").notNullable().defaultTo(0);
-      users.integer("user_post_thumbDown").notNullable().defaultTo(0);
       users.timestamps(false, true);
       users
         .integer("user_id")
@@ -40,6 +38,18 @@ exports.up = async (knex) => {
         .notNullable()
         .references("user_id")
         .inTable("user_information")
+        .onDelete("CASCADE");
+    })
+    .createTable("user_post_liked", (users) => {
+      users.increments("user_post_liked_id");
+      users.integer("user_post_liked_thumbUp").notNullable().defaultTo(0);
+      users.integer("user_post_liked_thumbDown").notNullable().defaultTo(0);
+      users
+        .integer("user_post_id")
+        .unsigned()
+        .notNullable()
+        .references("user_post_id")
+        .inTable("user_posts")
         .onDelete("CASCADE");
     })
     .createTable("view_user_post", (users) => {
@@ -57,6 +67,14 @@ exports.up = async (knex) => {
         .notNullable()
         .references("user_post_id")
         .inTable("user_posts")
+        .onDelete("CASCADE");
+
+      users
+        .integer("user_post_liked_id")
+        .unsigned()
+        .notNullable()
+        .references("user_post_liked_id")
+        .inTable("user_post_liked")
         .onDelete("CASCADE");
     })
     .createTable("user_comment", (users) => {

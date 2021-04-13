@@ -9,6 +9,7 @@ const UserPost = require('./user_post/user_post_router');
 const UserViewPost = require('./user_post/user_post_read/post_read_routes');
 const UserComment = require('./user_comment/user_comment_routes');
 const ViewComment = require('./user_comment/user_comment_read/user-comment-view/user_c_view_routes');
+const LikedPost = require('./user_post_liked/user_post_liked_routes');
 
 const server = express();
 server.use(express.json());
@@ -23,6 +24,9 @@ server.use("/user/comment", UserComment)
 
 //View user post
 server.use("/user/view/post", UserViewPost)
+
+//User post liked
+server.use("/user/post/liked", LikedPost)
 
 //User Post
 server.use("/user/post", UserPost)

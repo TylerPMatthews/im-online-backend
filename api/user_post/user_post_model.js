@@ -19,7 +19,10 @@ const edit = (id, changes) => {
 };
 //Delete a users information by ID
 const remove = (id) => {
-  return db("user_posts").where("user_post_id", id).del();
+  return db("user_posts").where("user_post_id", id).del()
+  .then(()=>{
+    return db("user_posts")
+  })
 };
 const findBy = (filter) => {
   return db("user_posts").where(filter);
