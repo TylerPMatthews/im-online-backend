@@ -42,8 +42,18 @@ exports.up = async (knex) => {
     })
     .createTable("user_post_liked", (users) => {
       users.increments("user_post_liked_id");
-      users.integer("user_post_liked_thumbUp").notNullable().defaultTo(0);
-      users.integer("user_post_liked_thumbDown").notNullable().defaultTo(0);
+      users.specificType('user_post_liked_username', 'text ARRAY');
+      users
+        .integer("user_post_id")
+        .unsigned()
+        .notNullable()
+        .references("user_post_id")
+        .inTable("user_posts")
+        .onDelete("CASCADE");
+    })
+    .createTable("user_post_disliked", (users) => {
+      users.increments("user_post_disliked_id");
+      users.specificType('user_post_disliked_username', 'text ARRAY');
       users
         .integer("user_post_id")
         .unsigned()
@@ -75,6 +85,14 @@ exports.up = async (knex) => {
         .notNullable()
         .references("user_post_liked_id")
         .inTable("user_post_liked")
+        .onDelete("CASCADE");
+
+      users
+        .integer("user_post_disliked_id")
+        .unsigned()
+        .notNullable()
+        .references("user_post_disliked_id")
+        .inTable("user_post_disliked")
         .onDelete("CASCADE");
     })
     .createTable("user_comment", (users) => {
@@ -127,6 +145,8 @@ exports.down = async (knex) => {
     .dropTableIfExists("user_information")
     .dropTableIfExists("user_profile")
     .dropTableIfExists("user_posts")
+    .dropTableIfExists("user_post_liked")
+    .dropTableIfExists("user_post_disliked")
     .dropTableIfExists("view_user_post")
     .dropTableIfExists("user_comment")
     .dropTableIfExists("user_comment_view");
