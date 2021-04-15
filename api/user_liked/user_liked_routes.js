@@ -1,5 +1,5 @@
 const express = require("express");
-const User = require("./user_friends_model");
+const User = require("./user_liked_model");
 const router = express.Router();
 //Get All users friends
 router.get("/", async (req, res, next) => {

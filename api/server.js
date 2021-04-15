@@ -4,13 +4,12 @@ const cors = require("cors");
 const UserInformation = require("./user_information/user_information_routes");
 const UserAuth = require("./user_information/user-auth");
 const Userprofile = require("./user_profile/user_profile_routes");
-const UserFriend = require('./user_friends/user_friends_routes');
-const UserPost = require('./user_post/user_post_router');
-const UserViewPost = require('./user_post/user_post_read/post_read_routes');
-const UserComment = require('./user_comment/user_comment_routes');
-const ViewComment = require('./user_comment/user_comment_read/user-comment-view/user_c_view_routes');
-const LikedPost = require('./user_post_liked/user_post_liked_routes');
-const DislikedPost = require('./user_disliked/user_disliked_routes');
+const UserPost = require("./user_post/user_post_router");
+const UserViewPost = require("./user_post/user_post_read/post_read_routes");
+const UserComment = require("./user_comment/user_comment_routes");
+const ViewComment = require("./user_comment/user_comment_read/user-comment-view/user_c_view_routes");
+const PostDisliked = require("./user_disliked/user_disliked_routes");
+const PostLiked = require("./user_liked/user_liked_routes");
 
 const server = express();
 server.use(express.json());
@@ -18,25 +17,22 @@ server.use(helmet());
 server.use(cors());
 
 //View comment
-server.use("/user/comment/view", ViewComment)
+server.use("/user/comment/view", ViewComment);
 
 //User comment
-server.use("/user/comment", UserComment)
+server.use("/user/comment", UserComment);
 
 //View user post
-server.use("/user/view/post", UserViewPost)
+server.use("/user/view/post", UserViewPost);
 
-//User post disliked
-server.use("/user/post/disliked", DislikedPost)
+//User disliked post
+server.use("/user/post/disliked", PostDisliked);
 
-//User post liked
-server.use("/user/post/liked", LikedPost)
+//User liked post
+server.use("/user/post/liked", PostLiked);
 
 //User Post
-server.use("/user/post", UserPost)
-
-//User friends
-server.use("/user/friends", UserFriend)
+server.use("/user/post", UserPost);
 
 //User profile routes
 server.use("/user/profile", Userprofile);

@@ -4,17 +4,16 @@ const getAll = () => {
   return db("view_user_post as vup")
     .join("user_information as ui", "ui.user_id", "vup.user_id")
     .join("user_posts as up", "up.user_post_id", "vup.user_post_id")
-    .join("user_post_liked as upl", "upl.user_post_liked_id", "vup.user_post_liked_id")
     .join("user_post_disliked as upd", "upd.user_post_disliked_id", "vup.user_post_disliked_id")
+    .join("user_post_liked as upl", "upl.user_post_liked_id", "vup.user_post_liked_id")
     .select(
       "ui.user_username",
       "up.user_post_text",
-      "up.user_post_img",
       "up.user_post_city",
       "up.user_post_State",
       "up.user_post_id",
-      "upl.user_post_liked_username",
-      "upd.user_post_disliked_username"
+      "upl.user_post_liked",
+      "upd.user_post_disliked"
     );
 };
 

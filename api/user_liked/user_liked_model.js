@@ -10,12 +10,11 @@ const getByID = (id) => {
 };
 //Post a new users information
 const post = (data) => {
-  return db("user_post_liked").insert(data)
-  .returning("user_post_liked_id")
+  return db("user_post_liked").insert(data).returning("user_post_liked_id");
 };
 //Edit a users information by ID
 const edit = (id, changes) => {
-  return db("user_post_liked").where("user_post_liked_id", id).update(changes)
+  return db("user_post_liked").where("user_post_liked_id", id).update(changes);
 };
 //Delete a users information by ID
 const remove = (id) => {

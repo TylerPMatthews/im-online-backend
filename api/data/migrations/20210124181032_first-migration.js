@@ -28,9 +28,8 @@ exports.up = async (knex) => {
     .createTable("user_posts", (users) => {
       users.increments("user_post_id");
       users.text("user_post_text").notNullable();
-      users.string("user_post_img");
-      users.string("user_post_city", 200);
-      users.string("user_post_State", 200);
+      users.string("user_post_city", 200).notNullable()
+      users.string("user_post_State", 200).notNullable()
       users.timestamps(false, true);
       users
         .integer("user_id")
@@ -42,7 +41,7 @@ exports.up = async (knex) => {
     })
     .createTable("user_post_liked", (users) => {
       users.increments("user_post_liked_id");
-      users.specificType('user_post_liked_username', 'text ARRAY');
+      users.integer("user_post_liked").defaultTo(0)
       users
         .integer("user_post_id")
         .unsigned()
@@ -53,7 +52,7 @@ exports.up = async (knex) => {
     })
     .createTable("user_post_disliked", (users) => {
       users.increments("user_post_disliked_id");
-      users.specificType('user_post_disliked_username', 'text ARRAY');
+      users.integer("user_post_disliked").defaultTo(0)
       users
         .integer("user_post_id")
         .unsigned()
